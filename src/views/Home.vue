@@ -1,18 +1,40 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home wrapper" :style="cssProps">
+    <NavPanel />
+    <!-- <bg-img /> -->
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import NavPanel from "@/components/navpanel";
+import BgImg from "@/components/bgimg";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    HelloWorld
-  }
-}
+    NavPanel,
+    BgImg,
+  },
+  data() {
+    return {
+      cssProps: {
+        backgroundImage: `url(${require("@/assets/sunsetmoon.jpg")})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      },
+    };
+  },
+};
 </script>
+
+<style lang="css">
+.home {
+  font-family: "Open Sans", sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+</style>
