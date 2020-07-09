@@ -1,52 +1,24 @@
 <template>
   <nav id="sidebar" class="bg-panel">
-    <div class="sidebar-header m-3">
-      <h5 class="font-color ">Music Mosaic</h5>
+    <div class="sidebar-header m-3 text-center">
+      <h5 class="font-color stencil title-font-style">Music Mosaic</h5>
+    </div>
+    <div class="playback d-flex justify-content-between p-5">
+      <span @click="playBackClick('paused')"><i class="fas fa-pause"></i></span>
+      <span @click="playBackClick('playing')"><i class="fas fa-play"></i></span>
+      <span @click="playBackClick('stopped')"><i class="fas fa-stop"></i></span>
+      <span @click="previousClick"><i class="fas fa-backward"></i></span>
+      <span @click="nextClick"><i class="fas fa-forward"></i></span>
     </div>
     <div class="d-flex justify-content-start ml-5">
       <ul class="list-unstyled components ">
-        <li class="active ">
-          <router-link
-            class="remove-underline font-weight-bolder"
-            :to="{ name: 'Home' }"
-            >Reports</router-link
-          >
-          <!-- <ul class="list-unstyled pl-2" id="homeSubmenu">
-            <li>
-              <router-link class="remove-underline" :to="{ name: 'Home' }"
-                >All Reports</router-link
-              >
-            </li>
-            <li>
-              <a href="#" class="remove-underline">Open Reports</a>
-            </li>
-            <li>
-              <a href="#" class="remove-underline">Closed Reports</a>
-            </li>
-          </ul> -->
-        </li>
-        <li>
-          <router-link
-            class="remove-underline font-weight-bolder"
-            :to="{ name: 'Profile' }"
-            >Profile</router-link
-          >
-          <!-- <ul class="list-unstyled pl-2" id="pageSubmenu">
-            <li>
-              <router-link class="remove-underline" :to="{ name: 'Profile' }"
-                >Open Reports</router-link
-              >
-            </li>
-            <li>
-              <a href="#" class="remove-underline">Closed Report</a>
-            </li>
-            <li>
-              <a href="#" class="remove-underline">Notes</a>
-            </li>
-            <li>
-              <a href="#" class="remove-underline">Collaborations</a>
-            </li>
-          </ul> -->
+        <li
+          v-for="sub in subreddits"
+          :key="sub"
+          class=""
+          @click="getVideos(sub)"
+        >
+          {{ sub }}
         </li>
       </ul>
     </div>
@@ -59,8 +31,30 @@ export default {
   data() {
     return {};
   },
-  computed: {},
-  methods: {},
+  computed: {
+    subreddits() {
+      return this.$store.state.subreddits;
+    },
+    currentlyPlayingVideo() {
+      return this.$store.state.currentlyPlayingVideo;
+    },
+  },
+  methods: {
+    getVideos(subreddit) {
+      this.$store.dispatch("getSubredditVideos", subreddit);
+    },
+    playBackClick(event) {
+      this.$store.dispatch("changePlayBackState", event);
+    },
+    nextClick() {
+      let nextSong = this.currentlyPlayingVideo + 1;
+      this.$store.dispatch("changeSong", nextSong);
+    },
+    previousClick() {
+      let previousSong = this.currentlyPlayingVideo - 1;
+      this.$store.dispatch("changeSong", previousSong);
+    },
+  },
   components: {},
 };
 </script>
@@ -76,11 +70,13 @@ export default {
   z-index: 999;
 }
 .bg-panel {
-  background-color: rgba(70, 19, 83, 0.01);
+  background-color: rgba(70, 19, 83, 0);
 }
 
-.font-color {
-  color: #e69d75;
+.title-font-style {
+  /* color: #e69d75; */
+  color: black;
+  font-size: 2rem;
 }
 
 .stencil {
@@ -89,7 +85,6 @@ export default {
 
 .remove-underline {
   text-decoration: none;
-  color: white;
 }
 .remove-underline:hover {
   color: lightblue;

@@ -1,18 +1,26 @@
 <template>
-  <div class="home wrapper" :style="cssProps">
+  <div class="home wrapper">
     <NavPanel />
-    <!-- <bg-img /> -->
+    <div class="mosaic-container py-2">
+      <yt-video
+        v-for="(videoId, index) in videoIds"
+        :key="videoId"
+        :videoId="videoId"
+        :playlistIndex="index"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import NavPanel from "@/components/navpanel";
-import BgImg from "@/components/bgimg";
+import ytVideo from "@/components/ytvideo";
+
 export default {
   name: "Home",
   components: {
     NavPanel,
-    BgImg,
+    ytVideo,
   },
   data() {
     return {
@@ -22,7 +30,18 @@ export default {
         backgroundSize: "cover",
         backgroundPosition: "center",
       },
+      navPanelValue: "",
     };
+  },
+  computed: {
+    videoIds() {
+      return this.$store.state.activeVideos;
+    },
+  },
+  methods: {
+    onClickNavPanel(value) {
+      this.navPanelValue = value;
+    },
   },
 };
 </script>
@@ -30,6 +49,15 @@ export default {
 <style lang="css">
 .home {
   font-family: "Open Sans", sans-serif;
+}
+
+.mosaic-container {
+  position: absolute;
+  top: 0;
+  left: 18%;
+  width: 80%;
+  height: auto;
+  /* border: 5px solid red; */
 }
 
 .wrapper {
