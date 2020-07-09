@@ -3,24 +3,100 @@
     <div class="sidebar-header m-3 text-center">
       <h5 class="font-color stencil title-font-style">Music Mosaic</h5>
     </div>
-    <div class="playback d-flex justify-content-between p-5">
-      <span @click="playBackClick('paused')"><i class="fas fa-pause"></i></span>
-      <span @click="playBackClick('playing')"><i class="fas fa-play"></i></span>
-      <span @click="playBackClick('stopped')"><i class="fas fa-stop"></i></span>
-      <span @click="previousClick"><i class="fas fa-backward"></i></span>
-      <span @click="nextClick"><i class="fas fa-forward"></i></span>
+    <div class="playback d-flex justify-content-between p-3">
+      <span class="playback-button py-2 px-3" @click="playBackClick('paused')"
+        ><i class="fas fa-pause"></i
+      ></span>
+      <span class="playback-button py-2 px-3" @click="playBackClick('playing')"
+        ><i class="fas fa-play"></i
+      ></span>
+      <span class="playback-button py-2 px-3" @click="playBackClick('stopped')"
+        ><i class="fas fa-stop"></i
+      ></span>
+      <span class="playback-button py-2 px-3" @click="previousClick"
+        ><i class="fas fa-backward"></i
+      ></span>
+      <span class="playback-button py-2 px-3" @click="nextClick"
+        ><i class="fas fa-forward"></i
+      ></span>
     </div>
-    <div class="d-flex justify-content-start ml-5">
-      <ul class="list-unstyled components ">
-        <li
-          v-for="sub in subreddits"
-          :key="sub"
-          class=""
-          @click="getVideos(sub)"
-        >
-          {{ sub }}
+    <div class="d-flex justify-content-center p-3">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item pill-style">
+          <a
+            class="nav-link active"
+            id="pills-home-tab"
+            data-toggle="pill"
+            href="#pills-home"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+            >Playlists</a
+          >
+        </li>
+        <li class="nav-item pill-style">
+          <a
+            class="nav-link"
+            id="pills-profile-tab"
+            data-toggle="pill"
+            href="#pills-profile"
+            role="tab"
+            aria-controls="pills-profile"
+            aria-selected="false"
+            >Playing</a
+          >
+        </li>
+        <li class="nav-item pill-style">
+          <a
+            class="nav-link"
+            id="pills-contact-tab"
+            data-toggle="pill"
+            href="#pills-contact"
+            role="tab"
+            aria-controls="pills-contact"
+            aria-selected="false"
+            >About</a
+          >
         </li>
       </ul>
+    </div>
+
+    <div class="d-flex justify-content-start ml-5">
+      <div class="tab-content" id="pills-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="pills-home"
+          role="tabpanel"
+          aria-labelledby="pills-home-tab"
+        >
+          <ul class="list-unstyled components ">
+            <li
+              v-for="sub in subreddits"
+              :key="sub"
+              class=""
+              @click="getVideos(sub)"
+            >
+              {{ sub }}
+            </li>
+          </ul>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="pills-profile"
+          role="tabpanel"
+          aria-labelledby="pills-profile-tab"
+        >
+          ...
+        </div>
+        <div
+          class="tab-pane fade"
+          id="pills-contact"
+          role="tabpanel"
+          aria-labelledby="pills-contact-tab"
+        >
+          ...
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -88,5 +164,23 @@ export default {
 }
 .remove-underline:hover {
   color: lightblue;
+}
+
+.nav-pills .nav-link:not(.active) {
+  background-color: white;
+  color: black;
+}
+
+.nav-pills .nav-link {
+  background-color: black;
+  color: white;
+}
+
+.playback-button {
+  transition-duration: 250ms;
+}
+
+.playback-button:hover {
+  background-color: lightgray;
 }
 </style>

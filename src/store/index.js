@@ -12,7 +12,15 @@ const _api = axios.create({
 
 export default new Vuex.Store({
   state: {
-    subreddits: ["listentothis", "metalcore", "hardcore"],
+    subreddits: [
+      "listentothis",
+      "metalcore",
+      "hardcore",
+      "EDM",
+      "Music",
+      "Mixes",
+      "HipHopHeads",
+    ],
     activeVideos: [],
     currentlyPlayingVideo: 0,
     playBackState: "stopped",
