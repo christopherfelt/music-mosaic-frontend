@@ -4,13 +4,22 @@
       <h5 class="font-color stencil title-font-style">Music Mosaic</h5>
     </div>
     <div class="playback d-flex justify-content-between p-3">
-      <span class="playback-button py-2 px-3" @click="playBackClick('paused')"
+      <span
+        class="playback-button py-2 px-3"
+        :class="{ pbActive: paused }"
+        @click="playBackClick('paused')"
         ><i class="fas fa-pause"></i
       ></span>
-      <span class="playback-button py-2 px-3" @click="playBackClick('playing')"
+      <span
+        class="playback-button py-2 px-3"
+        :class="{ pbActive: playing }"
+        @click="playBackClick('playing')"
         ><i class="fas fa-play"></i
       ></span>
-      <span class="playback-button py-2 px-3" @click="playBackClick('stopped')"
+      <span
+        class="playback-button py-2 px-3"
+        :class="{ pbActive: stopped }"
+        @click="playBackClick('stopped')"
         ><i class="fas fa-stop"></i
       ></span>
       <span class="playback-button py-2 px-3" @click="previousClick"
@@ -22,16 +31,17 @@
     </div>
     <div class="d-flex justify-content-center p-3">
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-        <li class="nav-item pill-style">
+        <li class="nav-item pill-style m-1">
           <a
-            class="nav-link active"
+            class="nav-link active p-1"
             id="pills-home-tab"
             data-toggle="pill"
             href="#pills-home"
             role="tab"
             aria-controls="pills-home"
             aria-selected="true"
-            >Playlists</a
+          >
+            <small> Playlists </small></a
           >
         </li>
         <li class="nav-item pill-style">
@@ -43,20 +53,22 @@
             role="tab"
             aria-controls="pills-profile"
             aria-selected="false"
-            >Playing</a
+          >
+            <small>Search</small></a
           >
         </li>
-        <li class="nav-item pill-style">
+        <li class="nav-item pill-style m-1">
           <a
-            class="nav-link"
+            class="nav-link p-1"
             id="pills-contact-tab"
             data-toggle="pill"
-            href="#pills-contact"
+            href="#pills-about"
             role="tab"
             aria-controls="pills-contact"
             aria-selected="false"
-            >About</a
           >
+            <small>About</small>
+          </a>
         </li>
       </ul>
     </div>
@@ -70,14 +82,7 @@
           aria-labelledby="pills-home-tab"
         >
           <ul class="list-unstyled components ">
-            <li
-              v-for="sub in subreddits"
-              :key="sub"
-              class=""
-              @click="getVideos(sub)"
-            >
-              {{ sub }}
-            </li>
+            <ListItem v-for="sub in subreddits" :key="sub" :subreddit="sub" />
           </ul>
         </div>
         <div
@@ -86,15 +91,15 @@
           role="tabpanel"
           aria-labelledby="pills-profile-tab"
         >
-          ...
+          <SearchReddit />
         </div>
         <div
           class="tab-pane fade"
-          id="pills-contact"
+          id="pills-about"
           role="tabpanel"
           aria-labelledby="pills-contact-tab"
         >
-          ...
+          <About />
         </div>
       </div>
     </div>
@@ -102,10 +107,17 @@
 </template>
 
 <script>
+import ListItem from "@/components/listitem";
+import About from "@/components/about";
+import SearchReddit from "@/components/search";
 export default {
   name: "NavPanel",
   data() {
-    return {};
+    return {
+      paused: false,
+      playing: false,
+      stopped: false,
+    };
   },
   computed: {
     subreddits() {
@@ -113,6 +125,9 @@ export default {
     },
     currentlyPlayingVideo() {
       return this.$store.state.currentlyPlayingVideo;
+    },
+    playBackState() {
+      return this.$store.state.playBackState;
     },
   },
   methods: {
@@ -131,7 +146,32 @@ export default {
       this.$store.dispatch("changeSong", previousSong);
     },
   },
-  components: {},
+  components: {
+    ListItem,
+    About,
+    SearchReddit,
+  },
+  watch: {
+    playBackState: function() {
+      if (this.playBackState == "paused") {
+        this.paused = true;
+        this.playing = false;
+        this.stopped = false;
+      } else if (this.playBackState == "playing") {
+        this.paused = false;
+        this.playing = true;
+        this.stopped = false;
+      } else if (this.playBackState == "stopped") {
+        this.paused = false;
+        this.playing = false;
+        this.stopped = true;
+      } else {
+        this.paused = false;
+        this.playing = false;
+        this.stopped = false;
+      }
+    },
+  },
 };
 </script>
 
@@ -182,5 +222,10 @@ export default {
 
 .playback-button:hover {
   background-color: lightgray;
+}
+
+.pbActive {
+  background-color: black;
+  color: white;
 }
 </style>

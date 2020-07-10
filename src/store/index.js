@@ -16,6 +16,9 @@ export default new Vuex.Store({
       "listentothis",
       "metalcore",
       "hardcore",
+      "chillstep",
+      "deathstep",
+      "deathcore",
       "EDM",
       "Music",
       "Mixes",
@@ -23,6 +26,7 @@ export default new Vuex.Store({
     ],
     activeVideos: [],
     currentlyPlayingVideo: 0,
+    currentPlaylist: "",
     playBackState: "stopped",
   },
   mutations: {
@@ -36,22 +40,32 @@ export default new Vuex.Store({
     changePlayBackState(state, playBackState) {
       state.playBackState = playBackState;
     },
+    setCurrentPlaylist(state, subreddit) {
+      state.currentPlaylist = subreddit;
+    },
   },
   actions: {
     async getSubredditVideos({ commit, dispatch }, subreddit) {
       try {
-        let res = await _api.get(subreddit + "/hot.json");
+        let res = await _api.get(subreddit + "/hot.json?limit=50");
         let result = rp.processResponseURls(res.data.data.children);
         commit("setActiveVideos", result[0]);
+        commit("setCurrentPlaylist", subreddit);
+        commit("increaseCurrentPlayingVideoNumber", 0);
+        commit("changePlayBackState", "");
       } catch (error) {
         console.error(error);
       }
     },
     changeSong({ commit, dispatch }, songNumber) {
       commit("increaseCurrentPlayingVideoNumber", songNumber);
+      commit("changePlayBackState", "playing");
     },
     changePlayBackState({ commit, dispatch }, playBackState) {
       commit("changePlayBackState", playBackState);
+    },
+    setCurrentPlayingVideo({ commit, dispatch }, playlistIndex) {
+      commit("increaseCurrentPlayingVideoNumber", playlistIndex);
     },
   },
   modules: {},

@@ -5,6 +5,8 @@
       width="300px"
       height="200px"
       ref="youtube"
+      @ended="nextSong"
+      @playing="setCurrentPlayingVideo"
     ></youtube>
     <!-- <div class="test">
       hello
@@ -27,7 +29,15 @@ export default {
       return this.$store.state.playBackState;
     },
   },
-  methods: {},
+  methods: {
+    nextSong() {
+      let nextSong = this.currentlyPlayingVideo + 1;
+      this.$store.dispatch("changeSong", nextSong);
+    },
+    setCurrentPlayingVideo() {
+      this.$store.dispatch("setCurrentPlayingVideo", this.playlistIndex);
+    },
+  },
   components: {},
   watch: {
     playBackState: function() {
