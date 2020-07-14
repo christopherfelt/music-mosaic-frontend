@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import rp from "../../ResponseProcessing";
+let gl = require("../../genrelist.json");
 
 Vue.use(Vuex);
 
@@ -12,17 +13,20 @@ const _api = axios.create({
 
 export default new Vuex.Store({
   state: {
-    subreddits: [
-      "listentothis",
-      "metalcore",
-      "hardcore",
-      "chillstep",
-      "deathstep",
-      "deathcore",
-      "EDM",
-      "Music",
-      "Mixes",
-      "HipHopHeads",
+    subreddits: [],
+    genres: [
+      "Classical",
+      "Electronic",
+      "Rock/Metal",
+      "Hip-hop",
+      "Decades",
+      "Culture",
+      "Other",
+      "Any",
+      "Community",
+      "Redditor-made",
+      "Artist/Band",
+      "Instrument",
     ],
     activeVideos: [],
     currentlyPlayingVideo: 0,
@@ -42,6 +46,10 @@ export default new Vuex.Store({
     },
     setCurrentPlaylist(state, subreddit) {
       state.currentPlaylist = subreddit;
+    },
+    setSubreddits(state, data) {
+      console.log("in mutionat");
+      Vue.set(state.subreddits, data.id, data.data);
     },
   },
   actions: {
@@ -66,6 +74,15 @@ export default new Vuex.Store({
     },
     setCurrentPlayingVideo({ commit, dispatch }, playlistIndex) {
       commit("increaseCurrentPlayingVideoNumber", playlistIndex);
+    },
+    getSubredditsByGenre({ commit, dispatch }) {
+      console.log("here helloe hello");
+      let keys = Object.keys(gl);
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        let subredditsList = gl[key];
+        commit("setSubreddits", { id: key, data: subredditsList });
+      }
     },
   },
   modules: {},

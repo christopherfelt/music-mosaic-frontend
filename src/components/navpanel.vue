@@ -29,19 +29,23 @@
         ><i class="fas fa-forward"></i
       ></span>
     </div>
-    <div class="d-flex justify-content-center p-3">
-      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <div
+      class="d-flex justify-content-center p-1 mt-3 animate__animated animate__faster animate__fadeInUp"
+      :class="{ animate__fadeOutUp: fadeStatus }"
+    >
+      <ul class="nav nav-pills" id="pills-tab" role="tablist">
         <li class="nav-item pill-style m-1">
           <a
-            class="nav-link active p-1"
+            class="nav-link p-1"
             id="pills-home-tab"
             data-toggle="pill"
             href="#pills-home"
             role="tab"
             aria-controls="pills-home"
             aria-selected="true"
+            @click="changeFadeStatus()"
           >
-            <small> Playlists </small></a
+            <small> Browse </small></a
           >
         </li>
         <li class="nav-item pill-style">
@@ -73,17 +77,15 @@
       </ul>
     </div>
 
-    <div class="d-flex justify-content-start ml-5">
+    <div class="d-flex justify-content-center">
       <div class="tab-content" id="pills-tabContent">
         <div
-          class="tab-pane fade show active"
+          class="tab-pane animate__animated animate__fadeInUp"
           id="pills-home"
           role="tabpanel"
           aria-labelledby="pills-home-tab"
         >
-          <ul class="list-unstyled components ">
-            <ListItem v-for="sub in subreddits" :key="sub" :subreddit="sub" />
-          </ul>
+          <Browse />
         </div>
         <div
           class="tab-pane fade"
@@ -110,13 +112,19 @@
 import ListItem from "@/components/listitem";
 import About from "@/components/about";
 import SearchReddit from "@/components/search";
+import Browse from "@/components/browse";
+import "animate.css";
 export default {
   name: "NavPanel",
+  mounted() {
+    this.$store.dispatch("getSubredditsByGenre");
+  },
   data() {
     return {
       paused: false,
       playing: false,
       stopped: false,
+      fadeStatus: false,
     };
   },
   computed: {
@@ -145,11 +153,15 @@ export default {
       let previousSong = this.currentlyPlayingVideo - 1;
       this.$store.dispatch("changeSong", previousSong);
     },
+    changeFadeStatus() {
+      this.fadeStatus = true;
+    },
   },
   components: {
     ListItem,
     About,
     SearchReddit,
+    Browse,
   },
   watch: {
     playBackState: function() {
@@ -214,6 +226,7 @@ export default {
 .nav-pills .nav-link {
   background-color: black;
   color: white;
+  border-radius: 0%;
 }
 
 .playback-button {
